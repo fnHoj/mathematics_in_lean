@@ -39,17 +39,38 @@ example : min a b = min b a := by
     apply min_le_left
 
 example : max a b = max b a := by
-  sorry
+  apply le_antisymm
+  repeat
+    apply max_le
+    · apply le_max_right
+    · apply le_max_left
+
 example : min (min a b) c = min a (min b c) := by
-  sorry
+  apply le_antisymm <;> apply le_min
+  any_goals apply le_min
+  any_goals first | apply min_le_left | apply min_le_right
+  any_goals apply le_trans (min_le_left .. : min (min a b) c ≤ min a b)
+  any_goals apply le_trans (min_le_right .. : min a (min b c) ≤ min b c)
+  all_goals first | apply min_le_left | apply min_le_right
+
 theorem aux : min a b + c ≤ min (a + c) (b + c) := by
-  sorry
+  apply le_min <;> apply add_le_add_right
+  · apply min_le_left
+  · apply min_le_right
+
 example : min a b + c = min (a + c) (b + c) := by
-  sorry
+  apply le_antisymm (aux ..)
+  have := aux (a + c) (b + c) (-c)
+  repeat rw [add_neg_cancel_right] at this
+  linarith
+
 #check (abs_add : ∀ a b : ℝ, |a + b| ≤ |a| + |b|)
 
-example : |a| - |b| ≤ |a - b| :=
-  sorry
+example : |a| - |b| ≤ |a - b| := by
+  have := abs_add (a - b) b
+  rw [sub_add_cancel] at this
+  linarith
+
 end
 
 section
@@ -66,7 +87,12 @@ example : x ∣ x ^ 2 := by
   apply dvd_mul_left
 
 example (h : x ∣ w) : x ∣ y * (x * z) + x ^ 2 + w ^ 2 := by
-  sorry
+  repeat apply dvd_add
+  · apply dvd_mul_of_dvd_right
+    apply dvd_mul_right
+  · exact dvd_pow (dvd_refl x) two_ne_zero
+  · exact dvd_pow h two_ne_zero
+
 end
 
 section
@@ -78,7 +104,6 @@ variable (m n : ℕ)
 #check (Nat.lcm_zero_left n : Nat.lcm 0 n = 0)
 
 example : Nat.gcd m n = Nat.gcd n m := by
-  sorry
+  apply dvd_antisymm <;> apply dvd_gcd <;> first | apply gcd_dvd_left | apply gcd_dvd_right
+
 end
-
-
