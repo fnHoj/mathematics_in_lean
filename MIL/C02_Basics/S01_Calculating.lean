@@ -6,6 +6,8 @@ example (a b c : ℝ) : a * b * c = b * (a * c) := by
   rw [mul_assoc b a c]
 
 -- Try these.
+
+--! NNG 后传
 example (a b c : ℝ) : c * b * a = b * (a * c) := by
   rw [mul_comm c b, mul_assoc b c a, mul_comm c a]
 
@@ -72,6 +74,7 @@ example : (a + b) * (a + b) = a * a + 2 * (a * b) + b * b := by
   rw [← add_assoc, add_assoc (a * a)]
   rw [mul_comm b a, ← two_mul]
 
+--! calc 它能发力的地方还挺爽的
 example : (a + b) * (a + b) = a * a + 2 * (a * b) + b * b :=
   calc
     (a + b) * (a + b) = a * a + b * a + (a * b + b * b) := by

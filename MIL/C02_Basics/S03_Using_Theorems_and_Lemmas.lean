@@ -43,6 +43,7 @@ example (x : ℝ) : x ≤ x :=
 #check (lt_trans : a < b → b < c → a < c)
 
 -- Try this.
+--! by linarith
 example (h₀ : a ≤ b) (h₁ : b < c) (h₂ : c ≤ d) (h₃ : d < e) : a < e := by calc
   a ≤ b := h₀
   b < c := h₁
@@ -135,7 +136,6 @@ example : |a*b| ≤ (a^2 + b^2)/2 := by
   have : 0 ≤ a^2 - 2*a*b + b^2 := by calc
     0 ≤ (a - b)^2 := pow_two_nonneg _
     _ = a^2 - 2*a*b + b^2 := by ring
-  rw [abs_le']
-  constructor <;> linarith
+  rw [abs_le']; constructor <;> linarith
 
 #check abs_le'.mpr

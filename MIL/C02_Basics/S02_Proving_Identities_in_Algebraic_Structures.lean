@@ -52,6 +52,8 @@ theorem neg_add_cancel_left (a b : R) : -a + (a + b) = b := by
   rw [← add_assoc, neg_add_cancel, zero_add]
 
 -- Prove these:
+--! NNG：先定义后证明性质
+--! 这堆：“有这些性质就叫环，是环就能证以下推论”
 theorem add_neg_cancel_right (a b : R) : a + b + -b = a := by
   rw [add_assoc, add_comm b, neg_add_cancel, add_zero]
 
@@ -61,6 +63,7 @@ theorem add_left_cancel {a b c : R} (h : a + b = a + c) : b = c := by
 theorem add_right_cancel {a b c : R} (h : a + b = c + b) : a = c := by
   rw [← add_neg_cancel_right a b, ← add_neg_cancel_right c b, h]
 
+--! 这 have 怎么想到的？？
 theorem mul_zero (a : R) : a * 0 = 0 := by
   have h : a * 0 + a * 0 = a * 0 + 0 := by
     rw [← mul_add, add_zero, add_zero]
@@ -133,6 +136,7 @@ variable {G : Type*} [Group G]
 
 namespace MyGroup
 
+--! 第一遍做也卡了好久 :-/
 theorem mul_inv_cancel (a : G) : a * a⁻¹ = 1 := by
   have : (a * a⁻¹) * (a * a⁻¹) = a * a⁻¹ := by
     rw [← mul_assoc, mul_assoc a, inv_mul_cancel, mul_one]

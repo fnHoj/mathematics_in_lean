@@ -28,8 +28,7 @@ example : min a b = min b a := by
     apply min_le_right
     apply min_le_left
   apply le_antisymm
-  apply h
-  apply h
+  repeat apply h
 
 example : min a b = min b a := by
   apply le_antisymm
@@ -45,6 +44,7 @@ example : max a b = max b a := by
     · apply le_max_right
     · apply le_max_left
 
+--! 稍微有些单调（
 example : min (min a b) c = min a (min b c) := by
   apply le_antisymm <;> apply le_min
   any_goals apply le_min

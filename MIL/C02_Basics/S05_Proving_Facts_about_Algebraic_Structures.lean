@@ -1,3 +1,6 @@
+--! 不是，怎么都说这章难啊？
+--! 感觉东西只是抽象而已，写起来没啥绕不过的弯
+
 import MIL.Common
 import Mathlib.Topology.MetricSpace.Basic
 
@@ -87,37 +90,12 @@ section
 variable {α : Type*} [Lattice α]
 variable (a b c : α)
 
+--! 疑似不太道德
 example (h : ∀ x y z : α, x ⊓ (y ⊔ z) = x ⊓ y ⊔ x ⊓ z) : a ⊔ b ⊓ c = (a ⊔ b) ⊓ (a ⊔ c) := by
-  apply le_antisymm
-  · apply sup_le <;> apply le_inf
-    repeat apply le_sup_left
-    · exact le_trans (inf_le_left ..) (le_sup_right ..)
-    · exact le_trans (inf_le_right ..) (le_sup_right ..)
-  · rw [h]
-    apply sup_le
-    · rw [inf_comm, absorb1]
-      apply le_sup_left
-    · rw [inf_comm, h]
-      apply sup_le
-      · exact le_trans (inf_le_right ..) (le_sup_left ..)
-      · rw [inf_comm]
-        apply le_sup_right
+  simp [← sup_assoc, inf_comm, h]
 
 example (h : ∀ x y z : α, x ⊔ y ⊓ z = (x ⊔ y) ⊓ (x ⊔ z)) : a ⊓ (b ⊔ c) = a ⊓ b ⊔ a ⊓ c := by
-  apply le_antisymm
-  · rw [h]
-    apply le_inf
-    · rw [sup_comm _ a, absorb2]
-      apply inf_le_left
-    · rw [sup_comm (a ⊓ b), h]
-      apply le_inf
-      · exact le_trans (inf_le_left ..) (le_sup_right ..)
-      · rw [sup_comm]
-        exact inf_le_right
-  · apply le_inf <;> apply sup_le
-    repeat apply inf_le_left
-    · exact le_trans (inf_le_right ..) (le_sup_left ..)
-    · exact le_trans (inf_le_right ..) (le_sup_right ..)
+  simp [← inf_assoc, sup_comm, h]
 
 end
 
@@ -139,14 +117,11 @@ example (h: 0 ≤ b - a) : a ≤ b := by
   apply add_le_add_right h
 
 example (h : a ≤ b) (h' : 0 ≤ c) : a * c ≤ b * c := by
-  have : 0 ≤ b - a := by
-    rw [← add_neg_cancel a, sub_eq_add_neg]
-    apply add_le_add_right h
   calc
     a * c = a * c + 0 := (add_zero _).symm
     _ ≤ a * c + (b - a) * c := by
       apply add_le_add_left
-      exact mul_nonneg this h'
+      exact mul_nonneg (by rwa [sub_nonneg]) h'
     _ = b * c := by noncomm_ring
 
 end
